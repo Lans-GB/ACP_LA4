@@ -1,3 +1,13 @@
+'''
+ SILVA, LANCE ANDREY C.
+ BSIT 2107
+ LAB ACTIVITY 3: FILE HANDLING
+ DONE:
+ CHALLENGE #1: SEARCH RECORD BY NAME
+ CHALLENGE #3: DELETE RECORD
+'''
+
+
 import os
 
 doc_path = os.path.expanduser('~/Documents')
@@ -5,6 +15,7 @@ doc_path = os.path.expanduser('~/Documents')
 if not os.path.exists(doc_path):
     os.makedirs(doc_path)
 
+#FUNCTION TO REGISTER STUDENT
 def student():
     student_no = input("Enter Student No.: ")
     lastName = input("Enter Last Name: ")  
@@ -16,6 +27,7 @@ def student():
     birthdate = input("Enter Birthdate (MM/DD/YYYY): ")
     contact_no = input("Enter Contact No.: ")
 
+    #STORING DATE INTO A LIST
     data = [
         f"Student No.: {student_no}",
         f"Full Name: {lastName}, {firstName} {middleInt}.",
@@ -26,13 +38,14 @@ def student():
         f"Contact No.: {contact_no}"
     ]
 
+    #WRITING DATA TO A TEXT FILE USING STUDENT ID
     filename = os.path.join(doc_path, f"{student_no}.txt")
-    with open(filename, 'w') as f:
+    with open(filename, 'w') as file:
         for info in data:
-            f.write(info + "\n")
+            file.write(info + "\n")
 
     print(f"Student information successfully saved to {filename}")
-
+#FUNCTION TO SEARCH RECORD EITHER BY ID OR NAME
 def search():
     while True:
         print("Select search method:")
@@ -49,43 +62,48 @@ def search():
         else:
             print("Invalid choice. Please select 1 or 2.")
 
+#FUNCTION TO VIEW RECORD USING ID
 def viewID():
-    student_id = input("Enter Student No. to view info: ")
-    filename = os.path.join(doc_path, f"{student_id}.txt")
-    try:
-        with open(filename, 'r') as file:
-            print("\n=== Student Information ===")
-            for line in file:
-                print(line.strip())
-    except FileNotFoundError:
-        print("Student record not found. Please check the Student No. and try again. \n")
+        student_id = input("Enter Student No. to view info: ")
+        filename = os.path.join(doc_path, f"{student_id}.txt")
+        
+        try:
+            with open(filename, 'r') as file:
+                print("\n=== Student Information ===")
+                for line in file:
+                    print(line.strip())
+                print("\n")
+        except FileNotFoundError:
+            print("Student record not found. Please check the Student No. and try again. \n")
 
+#FUNCTION TO VIEW BY NAME (CHALLENGE #1)
 def viewName():
-    name = input("Enter the name to search: ")
-    found = False
-    for file in os.listdir(doc_path):
-        if file.endswith(".txt"):
-            with open(os.path.join(doc_path, file), 'r') as f:
-                content = f.read()
-                if name in content:
-                    print(f"Student {name} found in {file}:\n{content}\n")
-                    found = True
-                    break
-    if not found:
-        print(f"No records found with the name: {name}. \n")
+        name = input("Enter the name to search: ")
+        found = False
+        for file in os.listdir(doc_path):
+            if file.endswith(".txt"):
+                with open(os.path.join(doc_path, file), 'r') as f:
+                    content = f.read()
+                    if name in content:
+                        print(f"Student {name} found in {file}:\n{content}\n")
+                        found = True
+                        break
+        if not found:
+            print(f"No records found with the name: {name}. \n")
 
+#FUNCTION TO DELETE RECORD (CHALLENGE #3)
 def delInfo():
-    while True:
         student_id = input("Enter Student No. to delete record: ")
         filename = os.path.join(doc_path, f"{student_id}.txt")
         if os.path.exists(filename):
             os.remove(filename)
             print(f"Student record {student_id} deleted.")
         else:
-            print("Student record not found.")
+            print("Student record not found.\n")
 
+# LOOP FOR MENU
 while True:
-    print("\n===Menu===")
+    print("\n==========MENU==========")
     print("[1] Register Student")
     print("[2] Open Student Record")
     print("[3] Delete Student Record")
@@ -101,7 +119,5 @@ while True:
         print("Thank you for using the program.")
         print("Exiting...")
         break
-    elif choice == '5':
-        updateInfo()
     else:
         print("Invalid choice. Please select a valid option.")
